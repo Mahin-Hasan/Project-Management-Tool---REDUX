@@ -1,1 +1,1 @@
-Tasksmaster Server => https://github.com/mir-hussain/taskmaster-server
+Exploring basic redux operations and functionality.
