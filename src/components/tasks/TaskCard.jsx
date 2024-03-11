@@ -1,12 +1,31 @@
 import { ArrowRightIcon, TrashIcon } from '@heroicons/react/24/outline';
-import { useDispatch } from 'react-redux';
-import {
-  removeTask,
-  updateStatus,
-} from '../../redux/features/tasks/tasksSlice';
+// import { useDispatch } from 'react-redux';
+// import {
+//   removeTask,
+//   updateStatus,
+// } from '../../redux/features/tasks/tasksSlice';
+import { useUpdateTaskMutation } from '../../redux/features/api/baseApi';
 
 const TaskCard = ({ task }) => {
-  const dispatch = useDispatch();
+  // const dispatch = useDispatch();
+
+  const [updateTask, { data, error }] = useUpdateTaskMutation(); //short cut method
+  // console.log(data, error);
+
+  const handleUpdate = (id, updatedStatus) => {
+    const data = {
+      status: updatedStatus,
+    };
+
+    const options = {
+      id: id,
+      data: data
+    }
+
+    updateTask(options)
+  }
+
+
 
   let updatedStatus;
 
@@ -20,11 +39,9 @@ const TaskCard = ({ task }) => {
   return (
     <div className="bg-secondary/10 rounded-md p-5">
       <h1
-        className={`text-lg font-semibold mb-3 ${
-          task.priority === 'high' ? 'text-red-500' : ' '
-        } ${task.priority === 'medium' ? 'text-yellow-500' : ' '} ${
-          task.priority === 'low' ? 'text-green-500' : ' '
-        }`}
+        className={`text-lg font-semibold mb-3 ${task.priority === 'high' ? 'text-red-500' : ' '
+          } ${task.priority === 'medium' ? 'text-yellow-500' : ' '} ${task.priority === 'low' ? 'text-green-500' : ' '
+          }`}
       >
         {task?.title}
       </h1>
@@ -33,12 +50,17 @@ const TaskCard = ({ task }) => {
       <div className="flex justify-between mt-3">
         <p>{task?.date}</p>
         <div className="flex gap-3">
-          <button onClick={() => dispatch(removeTask(task.id))} title="Delete">
+          <button
+            // onClick={() => dispatch(removeTask(task.id))} 
+            onClick={() => console.log('taskcard remove')}
+            title="Delete">
             <TrashIcon className="h-5 w-5 text-red-500" />
           </button>
           <button
             onClick={() =>
-              dispatch(updateStatus({ id: task.id, status: updatedStatus }))
+              // dispatch(updateStatus({ id: task.id, status: updatedStatus }))
+              // updateTask({ id: task._id, data: { status: updatedStatus } })
+              handleUpdate(task._id, updatedStatus)
             }
             title="Update Status"
           >
