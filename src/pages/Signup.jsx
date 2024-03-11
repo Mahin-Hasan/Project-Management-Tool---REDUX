@@ -4,7 +4,7 @@ import { useForm, useWatch } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { createUser } from '../redux/features/user/userSlice';
-import toast from 'react-hot-toast';
+import toast, { Toaster } from 'react-hot-toast';
 
 const Signup = () => {
   const { handleSubmit, register, control } = useForm();
@@ -13,7 +13,7 @@ const Signup = () => {
   const navigate = useNavigate();
   const [disabled, setDisabled] = useState(true);
 
-  const { isLoading, isError, error } = useSelector((state) => state.userSlice);
+  const { isLoading, isError, error, email } = useSelector((state) => state.userSlice);
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -29,9 +29,18 @@ const Signup = () => {
       setDisabled(true);
     }
   }, [password, confirmPassword]);
+
   useEffect(() => {
-    toast.error(error);
+    if (isError && error) {
+      toast.error(error);
+    }
   }, [isError, error])
+
+  useEffect(() => {
+    if (!isLoading && email) {
+      navigate('/');
+    }
+  }, [isLoading, email, navigate])
 
   const onSubmit = ({ name, email, password }) => {
     // Email Password signup
@@ -49,6 +58,7 @@ const Signup = () => {
 
   return (
     <div className="flex max-w-7xl mx-auto h-screen items-center">
+      <Toaster />
       <div className="w-1/2">
         <img src={loginImage} className="h-full w-full" alt="" />
       </div>
